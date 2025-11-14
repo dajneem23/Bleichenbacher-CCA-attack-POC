@@ -6,7 +6,7 @@ from sage.all_cmdline import *   # import sage library
 _sage_const_1 = Integer(1); _sage_const_2 = Integer(2); _sage_const_17 = Integer(17); _sage_const_0 = Integer(0); _sage_const_8 = Integer(8); _sage_const_0x02 = Integer(0x02); _sage_const_3 = Integer(3); _sage_const_1024 = Integer(1024); _sage_const_0x6c6f6c = Integer(0x6c6f6c); _sage_const_2048 = Integer(2048); _sage_const_10 = Integer(10)# setup
 import os
 def generate_keypair(size_N_in_bits):
-    size_prime = _sage_const_1  << (size_N_in_bits / _sage_const_2 )
+    size_prime = _sage_const_1  << (size_N_in_bits // _sage_const_2 )
     while True:
         p = random_prime(size_prime)
         q = random_prime(size_prime)
@@ -34,7 +34,8 @@ def padding(message, target_length):
     # random
     random_pad = os.urandom(target_length - _sage_const_3  - get_byte_length(message))
     for idx, val in enumerate(random_pad):
-        res += val << (len(random_pad) - idx + get_byte_length(message)) * _sage_const_8 
+        byte_val = val if isinstance(val, int) else ord(val)
+        res += byte_val << (len(random_pad) - idx + get_byte_length(message)) * _sage_const_8 
     # 00
     # message
     res += message
@@ -132,7 +133,7 @@ def bleichenbacher_padding():
                     return
                 # nope
                 new_interval.append((new_min, new_max))
-                print ""
+                print("")
                 possible_r += _sage_const_1 
         previous_steps = new_interval
         i += _sage_const_1 
@@ -219,11 +220,11 @@ def bleichenbacher_length():
                     continue
                 # found?
                 if new_max == new_min:
-                    print "found!"
-                    print new_min
-                    print "did we find that?"
-                    print padded
-                    print "took", time.time() - start_time, "seconds"
+                    print("found!")
+                    print(new_min)
+                    print("did we find that?")
+                    print(padded)
+                    print("took", time.time() - start_time, "seconds")
                     return
                 # nope
                 new_interval.append((new_min, new_max))
@@ -240,8 +241,6 @@ def bleichenbacher_length():
 
 #    
 if __name__ == "__main__":
-    # Use the faster padding-oracle variant for a quick demo
-    bleichenbacher_padding()
-    # To try the length-oracle variant (slower), switch to:
-    # bleichenbacher_length()
+    bleichenbacher_length()
+    #bleichenbacher_padding()
 

@@ -1,7 +1,7 @@
 # setup
 import os
 def generate_keypair(size_N_in_bits):
-    size_prime = 1 << (size_N_in_bits / 2)
+    size_prime = 1 << (size_N_in_bits // 2)
     while True:
         p = random_prime(size_prime)
         q = random_prime(size_prime)
@@ -29,7 +29,8 @@ def padding(message, target_length):
     # random
     random_pad = os.urandom(target_length - 3 - get_byte_length(message))
     for idx, val in enumerate(random_pad):
-        res += val << (len(random_pad) - idx + get_byte_length(message)) * 8
+        byte_val = val if isinstance(val, int) else ord(val)
+        res += byte_val << (len(random_pad) - idx + get_byte_length(message)) * 8
     # 00
     # message
     res += message
@@ -127,7 +128,7 @@ def bleichenbacher_padding():
                     return
                 # nope
                 new_interval.append((new_min, new_max))
-                print ""
+                print("")
                 possible_r += 1
         previous_steps = new_interval
         i += 1
@@ -214,11 +215,11 @@ def bleichenbacher_length():
                     continue
                 # found?
                 if new_max == new_min:
-                    print "found!"
-                    print new_min
-                    print "did we find that?"
-                    print padded
-                    print "took", time.time() - start_time, "seconds"
+                    print("found!")
+                    print(new_min)
+                    print("did we find that?")
+                    print(padded)
+                    print("took", time.time() - start_time, "seconds")
                     return
                 # nope
                 new_interval.append((new_min, new_max))
@@ -235,7 +236,5 @@ def bleichenbacher_length():
 
 #    
 if __name__ == "__main__":
-    # Use the faster padding-oracle variant for a quick demo
-    bleichenbacher_padding()
-    # To try the length-oracle variant (slower), switch to:
-    # bleichenbacher_length()
+    bleichenbacher_length()
+    #bleichenbacher_padding()
